@@ -1707,3 +1707,22 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   .page { display: block !important; }
   body { background: white; color: black; }
 }
+
+/* ============================================================
+   SMOOTH CLICK ANIMATIONS
+   ============================================================ */
+.btn:active, 
+.nav-item:active, 
+.sidebar-footer .user-card:active {
+  transform: scale(0.96);
+  transition: transform 0.1s var(--ease) !important;
+}
+
+.card {
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.card:active {
+  transform: scale(0.98);
+  transition: transform 0.1s var(--ease) !important;
+}
