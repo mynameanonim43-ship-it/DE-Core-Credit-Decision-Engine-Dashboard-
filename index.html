@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vantage — Platform Analisis Kredit Cerdas. Alat bantu analis untuk penilaian kelayakan kredit, rekomendasi nominal, dan monitoring EWS pasca-pencairan.">
+  <title>Vantage — Credit Intelligence Platform</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/main.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233b82f6'/><text y='22' x='5' font-size='20'>📊</text></svg>">
+</head>
+<body>
+<div id="app">
+
+  <!-- ============================================================
+       SPLASH SCREEN
+       ============================================================ -->
+  <div id="splash-screen" class="splash-screen">
+    <div class="splash-content">
+      <div class="splash-logo">📊</div>
+      <h1 class="splash-title">Vantage</h1>
+      <p class="splash-subtitle">Credit Intelligence Platform</p>
+      <div class="splash-loader"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SIDEBAR
+       ============================================================ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">📊</div>
+      <div>
+        <div class="logo-text">Vantage</div>
+        <div class="logo-sub">Credit Intelligence</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Utama</div>
+
+      <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+        <span class="nav-icon">🏠</span>
+        <span>Dashboard</span>
+      </div>
+
+      <div class="nav-item" data-page="borrowers" onclick="navigate('borrowers')">
+        <span class="nav-icon">👥</span>
+        <span>Daftar Borrower</span>
+      </div>
+
+      <div class="nav-item" data-page="analysis" onclick="navigate('analysis')">
+        <span class="nav-icon">➕</span>
+        <span>Analisis Baru</span>
+      </div>
+
+      <div class="nav-section-label">Monitor</div>
+
+      <div class="nav-item" data-page="borrowers" onclick="navigate('borrowers',{filter:'ews'})">
+        <span class="nav-icon">🚨</span>
+        <span>EWS Aktif</span>
+        <span class="nav-badge" id="ews-badge">0</span>
+      </div>
+
+      <div class="nav-section-label">Admin</div>
+
+      <div class="nav-item" data-page="settings" onclick="navigate('settings')">
+        <span class="nav-icon">⚙️</span>
+        <span>Pengaturan</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name">Admin Utama</div>
+          <div class="user-role">Super Admin</div>
+        </div>
+        <span style="color:var(--text-muted);font-size:12px">⚙</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <!-- Mobile hamburger -->
+      <button class="btn btn-ghost btn-icon" id="mobile-menu" style="display:none" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+      <span id="topbar-title" class="topbar-title">📊 Dashboard Portofolio</span>
+
+      <div class="topbar-search">
+        <span style="color:var(--text-muted)">🔍</span>
+        <input type="text" id="global-search" placeholder="Cari borrower... (Enter)">
+      </div>
+
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" onclick="navigate('analysis')">
+          ➕ Analisis Baru
+        </button>
+
+        <button class="btn btn-ghost btn-icon" title="Notifikasi" onclick="navigate('borrowers',{filter:'ews'})">
+          🔔
+        </button>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main>
+      <div id="page-content" class="page active">
+        <!-- Rendered by JS -->
+        <div style="display:flex;align-items:center;justify-content:center;height:400px;flex-direction:column;gap:16px;color:var(--text-muted)">
+          <div style="font-size:48px;animation:spin 1s linear infinite">⏳</div>
+          <div style="font-size:14px">Memuat dashboard...</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+</div>
+
+<!-- ============================================================
+     LOADING ANIMATION CSS (inline)
+     ============================================================ -->
+<style>
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+</style>
+
+<!-- ============================================================
+     SCRIPTS (ES Modules)
+     ============================================================ -->
+<script type="module" src="src/app.js"></script>
+</body>
+</html>
