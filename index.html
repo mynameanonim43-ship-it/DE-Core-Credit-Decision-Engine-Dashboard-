@@ -21,7 +21,7 @@
   <div id="splash-screen" class="splash-screen enhanced-splash" onclick="dismissSplash()" title="Klik untuk langsung masuk">
     <div class="splash-content">
       <div class="splash-logo enhanced-logo">📊</div>
-      <h1 class="splash-title glow-title">Vantage</h1>
+      <h1 class="splash-title glow-title" id="splash-brand-name">Vantage</h1>
       <p class="splash-subtitle typing-effect">Credit Intelligence Platform</p>
       <div class="splash-loader enhanced-loader"></div>
       <div style="font-size:12px;color:var(--text-muted);margin-top:24px;cursor:pointer;opacity:0.7;letter-spacing:1px;animation: pulseText 2s infinite">
@@ -119,7 +119,7 @@
     <div class="sidebar-logo">
       <div class="logo-icon">📊</div>
       <div>
-        <div class="logo-text">Vantage</div>
+        <div class="logo-text" id="sidebar-brand-name">Vantage</div>
         <div class="logo-sub">Credit Intelligence</div>
       </div>
     </div>
@@ -258,6 +258,11 @@
       <input type="text" id="modal-name-input" value="Admin Utama" style="width:100%; padding:8px 12px; background:var(--bg-base); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); outline:none;">
     </div>
 
+    <div style="margin-bottom:20px;">
+      <label style="display:block; margin-bottom:8px; font-size:12px; color:var(--text-secondary);">Nama Merek (Brand)</label>
+      <input type="text" id="modal-brand-input" value="Vantage" style="width:100%; padding:8px 12px; background:var(--bg-base); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); outline:none;">
+    </div>
+
     <div style="display:flex; justify-content:flex-end; gap:8px;">
       <button class="btn btn-ghost" onclick="document.getElementById('profile-modal').style.display='none'">Batal</button>
       <button class="btn btn-primary" onclick="saveProfile()" style="background:var(--brand); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Simpan</button>
@@ -271,11 +276,15 @@
   function loadProfile() {
     const savedName = localStorage.getItem('vantage_user_name');
     const savedAvatar = localStorage.getItem('vantage_user_avatar');
+    const savedBrand = localStorage.getItem('vantage_brand_name');
     
     const avatarDisplay = document.getElementById('sidebar-user-avatar');
     const modalAvatar = document.getElementById('modal-avatar-preview');
     const nameDisplay = document.getElementById('sidebar-user-name');
     const nameInput = document.getElementById('modal-name-input');
+    const brandInput = document.getElementById('modal-brand-input');
+    const brandDisplaySidebar = document.getElementById('sidebar-brand-name');
+    const brandDisplaySplash = document.getElementById('splash-brand-name');
     
     let initial = 'A';
 
@@ -283,6 +292,13 @@
       nameDisplay.innerText = savedName;
       nameInput.value = savedName;
       initial = savedName.charAt(0).toUpperCase();
+    }
+    
+    if (savedBrand) {
+      if(brandDisplaySidebar) brandDisplaySidebar.innerText = savedBrand;
+      if(brandDisplaySplash) brandDisplaySplash.innerText = savedBrand;
+      if(brandInput) brandInput.value = savedBrand;
+      document.title = savedBrand + " — Credit Intelligence Platform";
     }
     
     if (savedAvatar) {
@@ -310,8 +326,12 @@
 
   function saveProfile() {
     const newName = document.getElementById('modal-name-input').value.trim();
+    const newBrand = document.getElementById('modal-brand-input').value.trim();
     if (newName) {
       localStorage.setItem('vantage_user_name', newName);
+    }
+    if (newBrand) {
+      localStorage.setItem('vantage_brand_name', newBrand);
     }
     if (currentAvatarData) {
       localStorage.setItem('vantage_user_avatar', currentAvatarData);
