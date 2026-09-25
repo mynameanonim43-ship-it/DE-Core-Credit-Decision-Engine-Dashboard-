@@ -16,19 +16,6 @@
 <div id="app">
 
   <!-- ============================================================
-       SPLASH SCREEN
-       ============================================================ -->
-  <div id="splash-screen" class="splash-screen" onclick="dismissSplash()" title="Klik untuk langsung masuk">
-    <div class="splash-content">
-      <div class="splash-logo">📊</div>
-      <h1 class="splash-title">Vantage</h1>
-      <p class="splash-subtitle">Credit Intelligence Platform</p>
-      <div class="splash-loader"></div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:16px;cursor:pointer">Klik layar untuk lewati</div>
-    </div>
-  </div>
-
-  <!-- ============================================================
        SIDEBAR
        ============================================================ -->
   <aside class="sidebar" id="sidebar">
@@ -144,17 +131,7 @@
 <!-- ============================================================
      SCRIPTS (ES Modules)
      ============================================================ -->
-<script>
-  function dismissSplash() {
-    var splash = document.getElementById('splash-screen');
-    if (splash) {
-      splash.classList.add('hidden');
-      setTimeout(function() { if (splash && splash.parentNode) splash.remove(); }, 600);
-    }
-  }
-  // Auto-dismiss after 1.8 seconds guarantee
-  setTimeout(dismissSplash, 1800);
-</script>
+
 <script type="module" src="src/app.js"></script>
 </body>
 </html>
