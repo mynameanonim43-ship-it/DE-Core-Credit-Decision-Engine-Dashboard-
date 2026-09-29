@@ -14,9 +14,20 @@ let state = {
 };
 
 export function renderBorrowers(container, params = {}) {
+  // Reset state on each render, then apply params overrides
+  state = {
+    search: '',
+    filterDecision: 'all',
+    filterEWS:      'all',
+    filterSector:   'all',
+    sortKey:        'updatedAt',
+    sortDir:        'desc',
+  };
+
   // Handle query params
-  if (params.filter === 'ews')  state.filterEWS = 'active';
-  if (params.filter === 'LAYAK') state.filterDecision = 'LAYAK';
+  if (params.filter === 'ews')    state.filterEWS      = 'active';
+  if (params.filter === 'LAYAK')  state.filterDecision = 'LAYAK';
+  if (params.search)              state.search         = params.search;
 
   container.innerHTML = `
     <!-- Filter bar -->
@@ -41,9 +52,14 @@ export function renderBorrowers(container, params = {}) {
         ${SECTORS.map(s => `<option value="${s.id}" ${state.filterSector === s.id ? 'selected' : ''}>${s.label}</option>`).join('')}
       </select>
 
-      <button class="btn btn-primary btn-sm" onclick="navigate('analysis')">
-        ➕ Analisis Baru
-      </button>
+      <div style="display:flex;gap:var(--gap-sm)">
+        <button class="btn btn-secondary btn-sm" onclick="window.print()" style="background: var(--bg-hover); border: 1px solid var(--border);">
+          🖨️ Cetak PDF
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="navigate('analysis')">
+          ➕ Analisis Baru
+        </button>
+      </div>
     </div>
 
     <!-- Table -->
@@ -133,6 +149,18 @@ function bindEvents(container) {
     if (editBtn) {
       navigate('analysis', editBtn.dataset.id);
     }
+    
+    const delBtn = e.target.closest('[data-action="delete"]');
+    if (delBtn) {
+      e.stopPropagation(); // prevent row click
+      if (confirm('Yakin ingin menghapus borrower ini? Data tidak dapat dikembalikan.')) {
+        import('../data/store.js').then(store => {
+          store.deleteBorrower(delBtn.dataset.id);
+          window.showToast('Borrower berhasil dihapus');
+          renderTable(); // Re-render local view
+        });
+      }
+    }
   });
 
   // Sector filter
@@ -184,6 +212,7 @@ function renderTable() {
         <td>
           <div style="display:flex;gap:4px">
             <button class="btn btn-ghost btn-icon btn-sm" data-action="edit" data-id="${b.id}" title="Edit">✏️</button>
+            <button class="btn btn-ghost btn-icon btn-sm" data-action="delete" data-id="${b.id}" title="Delete">🗑️</button>
           </div>
         </td>
       </tr>

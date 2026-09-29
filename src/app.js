@@ -18,6 +18,8 @@ import { renderSettings }   from './screens/settings.js';
   window.addEventListener('navigate', e => {
     const { page, params } = e.detail;
     renderPage(page, params);
+    // Refresh EWS badge on every navigation
+    updateEWSBadge();
   });
 
   // Initial page
@@ -36,19 +38,21 @@ import { renderSettings }   from './screens/settings.js';
   }, 2500);
 })();
 
-// ── Router ──
+// ── Router (SPA Hidden Div Implementation) ──
 function renderPage(page, params = {}) {
-  let content = document.getElementById('page-content');
+  const content = document.getElementById('page-content');
   if (!content) return;
 
-  // Clear event listeners by replacing the node
-  const newContent = content.cloneNode(false);
-  content.parentNode.replaceChild(newContent, content);
-  content = newContent;
+  // Clear initial HTML skeleton blocks so they don't get stuck on screen
+  Array.from(content.children).forEach(child => {
+    if (!child.classList.contains('view-section')) {
+      child.remove();
+    }
+  });
 
-  // Update active nav
+  // Update active sidebar nav item
   document.querySelectorAll('.nav-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.page === page);
+    el.classList.toggle('active', el.dataset.page === page || (page === 'ews' && el.dataset.page === 'borrowers'));
   });
 
   // Update topbar title
@@ -58,29 +62,54 @@ function renderPage(page, params = {}) {
     analysis:  '➕ Analisis Baru',
     detail:    '🔎 Detail Borrower',
     settings:  '⚙️ Pengaturan',
+    ews:       '🚨 EWS Aktif'
   };
   const topbarTitle = document.getElementById('topbar-title');
   if (topbarTitle) topbarTitle.textContent = titles[page] ?? page;
 
-  // Render
-  switch (page) {
-    case 'dashboard': renderDashboard(content);          break;
-    case 'borrowers': renderBorrowers(content, params);  break;
-    case 'analysis':  renderAnalysis(content, params);   break;
-    case 'detail':    renderDetail(content, params);     break;
-    case 'settings':  renderSettings(content);           break;
-    default:          renderDashboard(content);
+  // 1. Hide all view <div>s and remove active class
+  const views = content.querySelectorAll('.view-section');
+  views.forEach(v => {
+    v.classList.remove('active-view');
+    v.style.display = 'none';
+  });
+
+  // 2. Find or create the corresponding view <div>
+  let activeView = document.getElementById(`${page}-view`);
+  if (!activeView) {
+    activeView = document.createElement('div');
+    activeView.id = `${page}-view`;
+    activeView.className = 'view-section';
+    content.appendChild(activeView);
   }
 
+  // 3. Render content into the view (re-render to update dynamic data)
+  switch (page) {
+    case 'dashboard': renderDashboard(activeView);                       break;
+    case 'borrowers': renderBorrowers(activeView, params);               break;
+    case 'analysis':  renderAnalysis(activeView, params);                break;
+    case 'detail':    renderDetail(activeView, params);                  break;
+    case 'settings':  renderSettings(activeView);                        break;
+    case 'ews':       renderBorrowers(activeView, { filter: 'ews' });    break;
+    default:          renderDashboard(activeView);
+  }
+
+  // 4. Display the view with a smooth CSS fade-in effect
+  activeView.style.display = 'block';
+  
+  // Trigger a DOM reflow so the browser registers the display change before animating opacity
+  void activeView.offsetWidth; 
+  
+  activeView.classList.add('active-view');
+
   // Scroll to top
-  content.scrollTo?.({ top: 0, behavior: 'smooth' });
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ── Navigation helper ──
 function navigate(page, params = {}) {
   window.dispatchEvent(new CustomEvent('navigate', {
-    detail: { page, params: typeof params === 'string' ? params : params }
+    detail: { page, params }
   }));
 }
 

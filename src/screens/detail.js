@@ -9,7 +9,14 @@ import { PILLARS } from '../core/weights.js';
 let activeTab = 'ringkasan';
 let ewsValues = {};
 
-export function renderDetail(container, borrowerId) {
+export function renderDetail(container, params) {
+  // Accept both string id (legacy) and object {id}
+  const borrowerId = (params && typeof params === 'object') ? params.id : params;
+  
+  // Reset tab state on each render to avoid stale state
+  activeTab = 'ringkasan';
+  ewsValues = {};
+  
   const borrower = getBorrowerById(borrowerId);
 
   if (!borrower) {
@@ -41,7 +48,7 @@ export function renderDetail(container, borrowerId) {
         </div>
       </div>
       <div style="display:flex;gap:var(--gap-sm)">
-        <button class="btn btn-secondary btn-sm" onclick="navigate('analysis','${borrower.id}')">✏️ Edit Analisis</button>
+        <button class="btn btn-secondary btn-sm" onclick="window.navigate('analysis', {id:'${borrower.id}'})">✏️ Edit Analisis</button>
         <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print</button>
       </div>
     </div>
@@ -485,7 +492,7 @@ function recalcEWS(borrower, container) {
 
   // Save updated EWS to store
   saveBorrower({ ...borrower, ewsStatus: newStatus, ewsValues });
-  showToast(`EWS diperbarui — Skor: ${judgement.ewsScore}`, newStatus === 'red' ? 'error' : newStatus === 'yellow' ? 'warning' : 'success');
+  window.showToast(`EWS diperbarui — Skor: ${judgement.ewsScore}`, newStatus === 'red' ? 'error' : newStatus === 'yellow' ? 'warning' : 'success');
 }
 
 function drawMiniScoreRing(canvasId, score) {

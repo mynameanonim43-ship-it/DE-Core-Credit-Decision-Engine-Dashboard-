@@ -367,7 +367,7 @@ function bindSettingsEvents(container, settings) {
       };
 
       saveSettings(newSettings);
-      showToast('Pengaturan berhasil disimpan', 'success');
+      window.showToast('Pengaturan berhasil disimpan', 'success');
     }
   });
 }

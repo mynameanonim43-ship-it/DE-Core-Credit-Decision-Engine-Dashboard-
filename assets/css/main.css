@@ -308,6 +308,17 @@ body {
 }
 .page.active { display: block; }
 
+/* SPA View Sections - managed by app.js router */
+.view-section {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.view-section.active-view {
+  display: block;
+  opacity: 1;
+}
+
 /* ============================================================
    CARDS & SURFACES
    ============================================================ */
@@ -602,6 +613,11 @@ select.form-control {
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 32px;
+}
+
+select.form-control option {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 textarea.form-control { resize: vertical; min-height: 80px; }
@@ -1725,4 +1741,157 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .card:active {
   transform: scale(0.98);
   transition: transform 0.1s var(--ease) !important;
+}
+
+/* ============================================================
+   SPA View Transitions
+   ============================================================ */
+.view-section {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+.view-section.active-view {
+  display: block;
+  opacity: 1;
+}
+
+/* ============================================================
+   PRINT / PDF STYLES
+   ============================================================ */
+@media print {
+  /* 1. Force Root Variables to Light Theme for Printing */
+  :root {
+    --bg-base: #ffffff !important;
+    --bg-elevated: #ffffff !important;
+    --bg-hover: #f1f5f9 !important;
+    --text-primary: #000000 !important;
+    --text-secondary: #333333 !important;
+    --text-muted: #555555 !important;
+    --border: #cccccc !important;
+    --brand-primary: #000000 !important;
+    --brand-light: #333333 !important;
+    --danger: #000000 !important;
+    --warning: #000000 !important;
+    --success: #000000 !important;
+  }
+
+  /* 2. Reset Backgrounds & Colors Globally */
+  html, body, .page, #page-content, .main-content {
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  /* 3. Hide UI Elements */
+  .sidebar, .topbar, .filter-bar, button, .btn, a, .progress-bar, .progress-fill, .tabs, .no-print {
+    display: none !important;
+  }
+  
+  table th:last-child, table td:last-child {
+    display: none !important;
+  }
+
+  /* 4. Fix Layouts */
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .dashboard-grid, .kpi-grid, .form-grid {
+    display: block !important; 
+  }
+
+  .card, .table-wrapper {
+    background: transparent !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    margin: 0 0 20px 0 !important;
+    padding: 15px !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* 5. Tables */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+  
+  th, td {
+    border: 1px solid #999 !important;
+    color: #000 !important;
+    padding: 8px !important;
+    font-size: 10pt !important;
+  }
+
+  th {
+    background-color: #eee !important;
+    font-weight: bold !important;
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+  }
+
+  /* 6. Badges to plain text */
+  .badge, [class*="badge-"] {
+    border: none !important;
+    background: transparent !important;
+    color: #000 !important;
+    padding: 0 !important;
+    font-weight: bold !important;
+    box-shadow: none !important;
+  }
+
+  /* 7. Hide non-active views in SPA */
+  .view-section:not(.active-view) {
+    display: none !important;
+  }
+
+  /* 8. Fix Tabs content printing */
+  .tab-content {
+    display: block !important;
+    opacity: 1 !important;
+    page-break-before: always !important;
+  }
+  .tab-content:first-of-type {
+    page-break-before: auto !important;
+  }
+
+  /* 9. Misc */
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  @page {
+    margin: 1cm;
+    size: A4 portrait;
+  }
+}
+
+/* ============================================================
+   FORM UI STYLES
+   ============================================================ */
+.form-grid { display: grid; gap: 16px; }
+.form-grid-2 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+.form-control {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+  outline: none;
+}
+.form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: rgba(255, 255, 255, 0.06);
 }

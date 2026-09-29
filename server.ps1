@@ -31,10 +31,10 @@ while ($listener.IsListening) {
             $ext = [System.IO.Path]::GetExtension($filePath).ToLower()
             $type = "application/octet-stream"
             
-            if ($ext -eq ".html") { $type = "text/html" }
-            elseif ($ext -eq ".css") { $type = "text/css" }
-            elseif ($ext -eq ".js") { $type = "application/javascript" }
-            elseif ($ext -eq ".json") { $type = "application/json" }
+            if ($ext -eq ".html") { $type = "text/html; charset=utf-8" }
+            elseif ($ext -eq ".css") { $type = "text/css; charset=utf-8" }
+            elseif ($ext -eq ".js") { $type = "application/javascript; charset=utf-8" }
+            elseif ($ext -eq ".json") { $type = "application/json; charset=utf-8" }
             elseif ($ext -eq ".png") { $type = "image/png" }
             elseif ($ext -eq ".jpg" -or $ext -eq ".jpeg") { $type = "image/jpeg" }
             elseif ($ext -eq ".svg") { $type = "image/svg+xml" }
